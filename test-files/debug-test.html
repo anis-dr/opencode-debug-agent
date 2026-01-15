@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Agent Test</title>
+  <style>
+    body { font-family: system-ui; padding: 2rem; background: #1a1a2e; color: #eee; }
+    button { padding: 0.5rem 1rem; margin: 0.5rem; cursor: pointer; }
+    #log { background: #16213e; padding: 1rem; margin-top: 1rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Debug Agent Test - Browser</h1>
+  <p>Open DevTools console to see requests</p>
+  
+  <button onclick="testBasic()">Test Basic Log</button>
+  <button onclick="testWithData()">Test With Data</button>
+  <button onclick="testError()">Test Error</button>
+  <button onclick="testLoop()">Test Loop (5x)</button>
+  
+  <div id="log">Click buttons to send debug logs...</div>
+
+  <script>
+    const DEBUG_URL = 'http://localhost:56034/log';
+    
+    function log(msg) {
+      document.getElementById('log').innerHTML += `<br>${new Date().toISOString().slice(11,19)} - ${msg}`;
+    }
+
+    async function sendDebug(label, data) {
+      try {
+        const res = await fetch(DEBUG_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ label, data })
+        });
+        const json = await res.json();
+        log(`✓ Sent: ${label} - ${json.status}`);
+      } catch (err) {
+        log(`✗ Error: ${err.message}`);
+      }
+    }
+
+    function testBasic() {
+      sendDebug('browser:basic', { message: 'Hello from browser!' });
+    }
+
+    function testWithData() {
+      sendDebug('browser:data', {
+        userAgent: navigator.userAgent,
+        timestamp: Date.now(),
+        url: window.location.href,
+        viewport: { width: window.innerWidth, height: window.innerHeight }
+      });
+    }
+
+    function testError() {
+      try {
+        throw new Error('Simulated error for testing');
+      } catch (err) {
+        sendDebug('browser:error', {
+          error: err.message,
+          stack: err.stack
+        });
+      }
+    }
+
+    async function testLoop() {
+      for (let i = 1; i <= 5; i++) {
+        await sendDebug(`browser:loop:${i}`, { iteration: i, total: 5 });
+        await new Promise(r => setTimeout(r, 200));
+      }
+    }
+
+    // Auto-send on page load
+    sendDebug('browser:pageload', { loaded: true });
+  </script>
+</body>
+</html>

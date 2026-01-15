@@ -10,7 +10,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, appendFile, readFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
 interface LogEntry {
@@ -87,8 +87,9 @@ class DebugServer {
     // GET /health - health check
     app.get('/health', (c) => c.text('OK'));
 
-    // Ensure .opencode directory exists
+    // Ensure .opencode directory exists and is gitignored
     await mkdir(dirname(this.logFile), { recursive: true });
+    await this.ensureGitignore();
 
     // Initialize log file writer
     const file = Bun.file(this.logFile);
@@ -260,6 +261,43 @@ class DebugServer {
   private async persistPort(port: number): Promise<void> {
     await mkdir(dirname(this.portFile), { recursive: true });
     await Bun.write(this.portFile, String(port));
+  }
+
+  /**
+   * Ensure debug files are in .gitignore
+   * Only ignores debug.port and debug.log, not the whole .opencode/ directory
+   */
+  private async ensureGitignore(): Promise<void> {
+    const gitignorePath = '.gitignore';
+    const entries = ['.opencode/debug.port', '.opencode/debug.log'];
+
+    try {
+      let content = '';
+      try {
+        content = await readFile(gitignorePath, 'utf-8');
+      } catch {
+        // .gitignore doesn't exist, we'll create it
+      }
+
+      const lines = content.split('\n').map((l) => l.trim());
+      const toAdd: string[] = [];
+
+      for (const entry of entries) {
+        if (!lines.includes(entry)) {
+          toAdd.push(entry);
+        }
+      }
+
+      if (toAdd.length === 0) {
+        return;
+      }
+
+      // Append entries
+      const newline = content.length > 0 && !content.endsWith('\n') ? '\n' : '';
+      await appendFile(gitignorePath, `${newline}${toAdd.join('\n')}\n`);
+    } catch {
+      // Silently fail - gitignore is nice-to-have, not critical
+    }
   }
 }
 
