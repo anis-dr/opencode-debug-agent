@@ -163,6 +163,7 @@ const DebugAgentPlugin: Plugin = async (ctx) => {
         description: 'Runtime debugging - capture and analyze execution data',
         mode: 'primary',
         prompt: AGENT_PROMPT,
+        color: '#FF6B35', // Vibrant orange - stands out for debugging
       };
 
       // Inject skills (using type assertion as skill may not be in Config type yet)
