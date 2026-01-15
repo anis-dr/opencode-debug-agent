@@ -79,7 +79,7 @@ class DebugServer {
         };
         await this.appendLog(entry);
         return c.json({ success: true });
-      } catch (error) {
+      } catch {
         return c.json({ error: 'Invalid JSON' }, 400);
       }
     });

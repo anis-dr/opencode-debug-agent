@@ -7,6 +7,8 @@
     "email": "anis00723@gmail.com"
   },
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -15,34 +17,35 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anis-dr/opencode-debug-agent.git"
+    "url": "git+https://github.com/anis-dr/opencode-debug-agent.git"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir dist --target bun",
+    "build": "bun build ./src/index.ts --outdir dist --target bun --format esm",
     "prepublishOnly": "bun run build"
   },
+  "opencode": {
+    "type": "plugin"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "debug",
+    "debugging",
+    "runtime"
+  ],
+  "license": "MIT",
   "dependencies": {
-    "@opencode-ai/plugin": "1.0.85",
+    "@opencode-ai/plugin": "^1.0.162",
     "hono": "^4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^20.11.5",
-    "@typescript-eslint/eslint-plugin": "8.47.0",
-    "@typescript-eslint/parser": "8.47.0",
-    "bun-types": "latest",
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "^5.1.3",
-    "prettier": "^3.2.4",
-    "typescript-eslint": "^8.47.0",
-    "vitest": "^3.2.4"
+    "@types/bun": "latest",
+    "typescript": "^5"
   }
 }

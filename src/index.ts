@@ -139,7 +139,12 @@ const DEBUG_SKILL = {
 // PLUGIN EXPORT
 // ============================================================
 
-export const DebugAgentPlugin: Plugin = async () => {
+// NOTE: Do NOT export functions from main index.ts!
+// OpenCode treats ALL exports as plugin instances and calls them.
+// Use default export only.
+
+const DebugAgentPlugin: Plugin = async (ctx) => {
+  // ctx contains { directory, client } - we can use directory for paths
   return {
     // Register debug tools
     tool: {
@@ -170,5 +175,4 @@ export const DebugAgentPlugin: Plugin = async () => {
   };
 };
 
-// Default export for compatibility
 export default DebugAgentPlugin;

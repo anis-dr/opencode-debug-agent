@@ -1,0 +1,8 @@
+## opencode-debug-agent Fix Tasks
+
+- [ ] Fix export format in src/index.ts - use named export like supermemory (SupermemoryPlugin)
+- [ ] Remove default export - supermemory only uses named export
+- [ ] Keep --target node in build (supermemory uses same)
+- [ ] Add opencode metadata to package.json
+- [ ] Build and test locally
+- [ ] Bump version and publish
