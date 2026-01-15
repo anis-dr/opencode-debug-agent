@@ -3,7 +3,7 @@
  * Run with: bun test-files/debug-test.ts
  */
 
-const DEBUG_URL = 'http://localhost:56034/log';
+const DEBUG_URL = 'http://localhost:61750/log';
 
 async function sendDebug(label: string, data: unknown): Promise<void> {
   try {
