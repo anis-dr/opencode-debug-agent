@@ -22,7 +22,7 @@ function generateSnippet(url: string): string {
  */
 export const debugStart = tool({
   description:
-    'Start debug server to capture runtime data. Returns port, URL, and ready-to-use code snippet for instrumentation.',
+    'Start debug server to capture runtime data. Returns {port, url, snippet}. ALWAYS use the returned snippet - it has the correct port baked in.',
   args: {
     port: tool.schema
       .number()
@@ -46,7 +46,7 @@ export const debugStart = tool({
  * Stop the debug server and flush remaining logs
  */
 export const debugStop = tool({
-  description: 'Stop the debug server and flush remaining logs to disk.',
+  description: 'Stop debug server and flush logs to disk. Call this when debugging is complete, then remove all instrumentation.',
   args: {},
   async execute() {
     if (!debugServer.isRunning()) {
@@ -63,7 +63,7 @@ export const debugStop = tool({
  * Read captured debug logs
  */
 export const debugRead = tool({
-  description: 'Read captured debug logs. Returns parsed JSON array of log entries.',
+  description: 'Read captured logs. Returns {entries: [{timestamp, label, data}...], count}. Use tail param for recent entries only.',
   args: {
     tail: tool.schema
       .number()
@@ -90,7 +90,7 @@ export const debugRead = tool({
  * Clear the debug log file
  */
 export const debugClear = tool({
-  description: 'Clear the debug log file.',
+  description: 'Clear the debug log file. Use to start fresh capture session.',
   args: {},
   async execute() {
     await debugServer.clearLogs();
@@ -103,7 +103,7 @@ export const debugClear = tool({
  */
 export const debugStatus = tool({
   description:
-    'Check if debug server is running and get current port/URL. Also shows persisted port from previous sessions.',
+    'Check server state. Returns {active, port, url, snippet} if running, or {persistedPort} from previous session. Call this first when resuming.',
   args: {},
   async execute() {
     const info = debugServer.getInfo();
