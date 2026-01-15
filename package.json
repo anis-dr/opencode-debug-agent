@@ -1,10 +1,10 @@
 {
-  "name": "{{pluginName}}",
+  "name": "opencode-debug-agent",
   "version": "0.1.0",
-  "description": "{{description}}",
+  "description": "OpenCode plugin for runtime debugging - capture and analyze execution data",
   "author": {
-    "name": "{{authorName}}",
-    "email": "{{authorEmail}}"
+    "name": "anis00723",
+    "email": "anis00723@gmail.com"
   },
   "type": "module",
   "exports": {
@@ -15,18 +15,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "{{repositoryUrl}}"
+    "url": "https://github.com/anis-dr/opencode-debug-agent.git"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "files": [
     "dist",
-    "src/version.ts"
+    "src"
   ],
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir dist --target bun",
+    "prepublishOnly": "bun run build"
+  },
   "dependencies": {
-    "@opencode-ai/plugin": "1.0.85"
+    "@opencode-ai/plugin": "1.0.85",
+    "hono": "^4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

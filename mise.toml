@@ -10,3 +10,6 @@ hk = "1.26.0"
 _.path = [
     "{{config_root}}/node_modules/.bin",
 ]
+
+[settings]
+task_includes = [".mise/tasks"]
